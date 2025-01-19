@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
@@ -8,60 +7,42 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // FORMAT DATE TIME
-export const formatDateTime = (dateString: Date) => {
+export const formatDateTime = (dateInput: Date | string) => {
+  const date = new Date(dateInput);
+
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    weekday: "short", // abbreviated weekday name (e.g., 'Mon')
-    month: "short", // abbreviated month name (e.g., 'Oct')
-    day: "numeric", // numeric day of the month (e.g., '25')
-    hour: "numeric", // numeric hour (e.g., '8')
-    minute: "numeric", // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
   };
 
   const dateDayOptions: Intl.DateTimeFormatOptions = {
-    weekday: "short", // abbreviated weekday name (e.g., 'Mon')
-    year: "numeric", // numeric year (e.g., '2023')
-    month: "2-digit", // abbreviated month name (e.g., 'Oct')
-    day: "2-digit", // numeric day of the month (e.g., '25')
+    weekday: "short",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   };
 
   const dateOptions: Intl.DateTimeFormatOptions = {
-    month: "short", // abbreviated month name (e.g., 'Oct')
-    year: "numeric", // numeric year (e.g., '2023')
-    day: "numeric", // numeric day of the month (e.g., '25')
+    month: "short",
+    year: "numeric",
+    day: "numeric",
   };
 
   const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: "numeric", // numeric hour (e.g., '8')
-    minute: "numeric", // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
   };
 
-  const formattedDateTime: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateTimeOptions
-  );
-
-  const formattedDateDay: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateDayOptions
-  );
-
-  const formattedDate: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateOptions
-  );
-
-  const formattedTime: string = new Date(dateString).toLocaleString(
-    "en-US",
-    timeOptions
-  );
-
   return {
-    dateTime: formattedDateTime,
-    dateDay: formattedDateDay,
-    dateOnly: formattedDate,
-    timeOnly: formattedTime,
+    dateTime: date.toLocaleString("en-US", dateTimeOptions),
+    dateDay: date.toLocaleString("en-US", dateDayOptions),
+    dateOnly: date.toLocaleString("en-US", dateOptions),
+    timeOnly: date.toLocaleString("en-US", timeOptions),
   };
 };
 
@@ -75,11 +56,10 @@ export function formatAmount(amount: number): string {
   return formatter.format(amount);
 }
 
-export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
+export const parseStringify = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
-export const removeSpecialCharacters = (value: string) => {
-  return value.replace(/[^\w\s]/gi, "");
-};
+export const removeSpecialCharacters = (value: string): string =>
+  value.replace(/[^\w\s]/gi, "");
 
 interface UrlQueryParams {
   params: string;
@@ -87,9 +67,8 @@ interface UrlQueryParams {
   value: string;
 }
 
-export function formUrlQuery({ params, key, value }: UrlQueryParams) {
+export function formUrlQuery({ params, key, value }: UrlQueryParams): string {
   const currentUrl = qs.parse(params);
-
   currentUrl[key] = value;
 
   return qs.stringifyUrl(
@@ -100,6 +79,8 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams) {
     { skipNull: true }
   );
 }
+
+type AccountTypes = "depository" | "credit";
 
 export function getAccountTypeColors(type: AccountTypes) {
   switch (type) {
@@ -129,64 +110,54 @@ export function getAccountTypeColors(type: AccountTypes) {
   }
 }
 
+interface Transaction {
+  category: string;
+}
+
+interface CategoryCount {
+  name: string;
+  count: number;
+  totalCount: number;
+}
+
 export function countTransactionCategories(
   transactions: Transaction[]
 ): CategoryCount[] {
-  const categoryCounts: { [category: string]: number } = {};
+  const categoryCounts: Record<string, number> = {};
   let totalCount = 0;
 
-  // Iterate over each transaction
-  transactions &&
-    transactions.forEach((transaction) => {
-      // Extract the category from the transaction
-      const category = transaction.category;
+  transactions.forEach(({ category }) => {
+    if (Object.prototype.hasOwnProperty.call(categoryCounts, category)) {
+      categoryCounts[category]++;
+    } else {
+      categoryCounts[category] = 1;
+    }
+    totalCount++;
+  });
 
-      // If the category exists in the categoryCounts object, increment its count
-      if (categoryCounts.hasOwnProperty(category)) {
-        categoryCounts[category]++;
-      } else {
-        // Otherwise, initialize the count to 1
-        categoryCounts[category] = 1;
-      }
-
-      // Increment total count
-      totalCount++;
-    });
-
-  // Convert the categoryCounts object to an array of objects
-  const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
-    (category) => ({
+  return Object.keys(categoryCounts)
+    .map((category) => ({
       name: category,
       count: categoryCounts[category],
       totalCount,
-    })
-  );
-
-  // Sort the aggregatedCategories array by count in descending order
-  aggregatedCategories.sort((a, b) => b.count - a.count);
-
-  return aggregatedCategories;
+    }))
+    .sort((a, b) => b.count - a.count);
 }
 
-export function extractCustomerIdFromUrl(url: string) {
-  // Split the URL string by '/'
+export function extractCustomerIdFromUrl(url: string): string {
   const parts = url.split("/");
-
-  // Extract the last part, which represents the customer ID
-  const customerId = parts[parts.length - 1];
-
-  return customerId;
+  return parts[parts.length - 1];
 }
 
-export function encryptId(id: string) {
+export function encryptId(id: string): string {
   return btoa(id);
 }
 
-export function decryptId(id: string) {
+export function decryptId(id: string): string {
   return atob(id);
 }
 
-export const getTransactionStatus = (date: Date) => {
+export const getTransactionStatus = (date: Date): string => {
   const today = new Date();
   const twoDaysAgo = new Date(today);
   twoDaysAgo.setDate(today.getDate() - 2);
