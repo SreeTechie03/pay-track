@@ -1,6 +1,4 @@
-import AnimatedCounter from './ui/AnimatedCounter';
-import DoughnutChart from './ui/DoughnutChart';
-
+import React from 'react';
 
 interface TotalBalanceBoxProps {
   accounts: any[];
