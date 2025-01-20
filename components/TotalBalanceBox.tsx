@@ -1,5 +1,5 @@
-import React from 'react';
-
+import DoughnutChart from './ui/DoughnutChart';
+import AnimatedCounter from './ui/AnimatedCounter';
 interface TotalBalanceBoxProps {
   accounts: any[];
   totalBanks: number;
