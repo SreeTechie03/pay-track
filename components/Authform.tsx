@@ -19,8 +19,11 @@ import { Input } from "@/components/ui/input"
 import { AuthformSchema } from '@/lib/utils'
 import CustomInput from './CustomInput'
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { signIn, signUp } from '@/lib/actions/user.actions'
 
 const Authform = ({type}:{type :string}) => {
+    const router = useRouter();
     const [user,setUser]=useState(null);
     const [isLoading,setIsLoading]=useState(false);
 
@@ -33,9 +36,26 @@ const Authform = ({type}:{type :string}) => {
           password: "",
         },
       })
-      const onSubmit=async(values: z.infer<typeof formSchema>) =>{
+      const onSubmit=async(data: z.infer<typeof formSchema>) =>{
         setIsLoading(true);
         try {
+          //Sign up with Appwrite & create plaid token
+
+          if(type === 'sign-up'){
+            const newUser = await signUp(data);
+
+            setUser(newUser);
+            }
+
+          if(type === 'sign-in'){
+            // const response = await signIn({
+            //   email: data.email,
+            //   password: data.password,
+            // })
+
+            // if(response) router.push('/')
+
+          }
           
         } catch (error) {
           console.log(error);
@@ -57,7 +77,7 @@ const Authform = ({type}:{type :string}) => {
         </Link>
         <div className='flex flex-col gap-1 md:gap-3'>
             <h1 className='text-24 lg:text-36 font-semibold text-gray-900'>
-                {user ?'Link Account':type==='sign-in'?'sign-In':'sign-Up'}
+                {user ?'Link Account':type==='sign-in'?'Sign-In':'Sign-Up'}
                 <p className='text-16 font-normal text-gray-600'>
                     {user?'Link your account to get started':'Please enter your details'}
                 </p>
@@ -78,6 +98,7 @@ const Authform = ({type}:{type :string}) => {
                       <CustomInput control={form.control} name='lastname' label="Last Name" placeholder="Enter your last name"/>
                     </div>
                     <CustomInput control={form.control} name='address1' label="Address" placeholder="Enter your specific address"/>
+                    <CustomInput control={form.control} name='city' label="City" placeholder="Enter your city"/>
                     <div className='flex gap-4'>
                       <CustomInput control={form.control} name='state' label="State" placeholder="Example: AP"/>
                       <CustomInput control={form.control} name='postalcode' label="Postal Code" placeholder="Example: 517001"/>
