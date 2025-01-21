@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 
 
 
-
 export const signIn = async () => {
     try{
       // Mutation /Database / Make fetch
@@ -23,7 +22,7 @@ export const signUp = async ( userData: SignUpParams) => {
       const newUserAccount=await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
       const session = await account.createEmailPasswordSession(email, password);
 
-  cookies().set("appwrite-session", session.secret, {
+  (await cookies()).set("appwrite-session", session.secret, {
     path: "/",
     httpOnly: true,
     sameSite: "strict",

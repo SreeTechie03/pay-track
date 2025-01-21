@@ -24,7 +24,7 @@ import { signIn, signUp } from '@/lib/actions/user.actions'
 
 const Authform = ({type}:{type :string}) => {
     const router = useRouter();
-    const [user,setUser]=useState(null);
+    const [user, setUser] = useState<User | null>(null);
     const [isLoading,setIsLoading]=useState(false);
 
     const formSchema=AuthformSchema(type);
@@ -42,8 +42,8 @@ const Authform = ({type}:{type :string}) => {
           //Sign up with Appwrite & create plaid token
 
           if(type === 'sign-up'){
-            const newUser = await signUp(data);
-
+            const newUser: User = await signUp(data);
+            
             setUser(newUser);
             }
 
@@ -53,7 +53,7 @@ const Authform = ({type}:{type :string}) => {
             //   password: data.password,
             // })
 
-            // if(response) router.push('/')
+            //  if(response) router.push('/')
 
           }
           
