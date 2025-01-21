@@ -2,8 +2,9 @@
 
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
-import { cookies } from "next/dist/server/request/cookies";
 import { parseStringify } from "../utils";
+import { cookies } from "next/headers";
+
 
 
 
