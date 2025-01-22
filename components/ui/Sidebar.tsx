@@ -3,8 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { sidebarLinks } from '@/constants'; // Make sure you have the correct path
-import { cn } from '@/lib/utils'; // Ensure classnames is installed
+import { sidebarLinks } from '@/constants';
+import { cn } from '@/lib/utils'; 
+import Footer from './Footer';
 
 interface SidebarProps {
   user: { firstName: string; lastName: string };
@@ -50,8 +51,8 @@ const Sidebar = ({ user }: SidebarProps) => {
         USER
       </nav>
 
+      <Footer user={user as User}/>
       
-      FOOTER
     </section>
   );
 };

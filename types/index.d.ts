@@ -34,6 +34,7 @@ declare type User = {
   firstName: string;
   lastName: string;
   name:string;
+  user: string
   address1: string;
   city: string;
   state: string;
@@ -209,8 +210,28 @@ declare interface TotlaBalanceBoxProps {
   totalCurrentBalance: number;
 }
 
+//ikkada chesa nenu own ga
 declare interface FooterProps {
   user: User;
+  type?: 'mobile' | 'desktop'
+  
+}
+
+declare interface SiderbarProps {
+  user: {
+    firstName: string;
+    lastName: string;
+    $id: string;
+    email: string;
+    userId: string;
+    dwollaCustomerUrl: string;
+  }
+
+}
+
+declare interface User{
+  firstName: string;
+  lastName: string;
 }
 
 declare interface RightSidebarProps {
@@ -219,9 +240,7 @@ declare interface RightSidebarProps {
   banks: Bank[] & Account[];
 }
 
-declare interface SiderbarProps {
-  user: User;
-}
+
 
 declare interface RecentTransactionsProps {
   accounts: Account[];
