@@ -44,7 +44,7 @@ const Authform = ({type}:{type :string}) => {
           if(type === 'sign-up'){
 
             const newUser= await signUp(data);
-          
+          // error vachina, user create ayyaka next page ki navigate avvali
             setUser(newUser);
             }
 
