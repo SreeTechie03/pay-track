@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { AuthformSchema } from '@/lib/utils'
 import CustomInput from './CustomInput'
-import { Loader2 } from 'lucide-react'
+import { Loader2, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { signIn, signUp } from '@/lib/actions/user.actions'
 
@@ -40,22 +40,15 @@ const Authform = ({type}:{type :string}) => {
         setIsLoading(true);
         try {
           //Sign up with Appwrite & create plaid token
-          const newUser = await signUp({
-            email: data.email,
-            password: data.password,
-            firstName: data.firstname,
-            lastName: data.lastname,
-            address1: data.address1,
-            city: data.city,
-            state: data.state,
-            postalCode: data.postalcode,
-            dateOfBirth: data.dateofbirth,
-            ssn: data.ssn,
-          });
-          setUser(newUser ? (newUser as unknown as User) : null);
-          console.log('newUser', newUser);
 
-          if (type === 'sign-in') {
+          if(type === 'sign-up'){
+
+            const newUser= await signUp(data);
+          // error vachina, user create ayyaka next page ki navigate avvali
+            setUser(newUser);
+            }
+
+          if(type === 'sign-in'){
             // const response = await signIn({
             //   email: data.email,
             //   password: data.password,
@@ -111,7 +104,7 @@ const Authform = ({type}:{type :string}) => {
                       <CustomInput control={form.control} name='postalcode' label="Postal Code" placeholder="Example: 517001"/>
                     </div>
                     <div className='flex gap-4'>
-                      <CustomInput control={form.control} name='dateofbirth' label="Date Of Birth" placeholder="yyy-mm-dd"/>
+                      <CustomInput control={form.control} name='dateofbirth' label="Date Of Birth" placeholder="yyyy-mm-dd"/>
                       <CustomInput control={form.control} name='ssn' label="SSN" placeholder="Example:1234"/>
                     </div>
                     </>
