@@ -40,22 +40,28 @@ const Authform = ({type}:{type :string}) => {
         setIsLoading(true);
         try {
           //Sign up with Appwrite & create plaid token
+          const newUser = await signUp({
+            email: data.email,
+            password: data.password,
+            firstName: data.firstname,
+            lastName: data.lastname,
+            address1: data.address1,
+            city: data.city,
+            state: data.state,
+            postalCode: data.postalcode,
+            dateOfBirth: data.dateofbirth,
+            ssn: data.ssn,
+          });
+          setUser(newUser ? (newUser as unknown as User) : null);
+          console.log('newUser', newUser);
 
-          if(type === 'sign-up'){
-
-            const newUser= await signUp(data);
-          // error vachina, user create ayyaka next page ki navigate avvali
-            setUser(newUser);
-            }
-
-          if(type === 'sign-in'){
+          if (type === 'sign-in') {
             // const response = await signIn({
             //   email: data.email,
             //   password: data.password,
             // })
 
             //  if(response) router.push('/')
-
           }
           
         } catch (error) {
@@ -127,7 +133,7 @@ const Authform = ({type}:{type :string}) => {
             <p className='text-14 font-normal text-gray-600'>
               {type==='sign-in'?'Don\'t have an account?':'Already have an account?'}
             </p>
-              <Link href={`/${type==='sign-in'?'sign-up':'sign-in'}`} className='form-link'>
+              <Link href={/${type==='sign-in'?'sign-up':'sign-in'}} className='form-link'>
                 {type==='sign-in'?'Sign Up':'Sign In'}
               </Link>
         </footer>
