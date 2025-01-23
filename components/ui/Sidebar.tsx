@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import Footer from './Footer';
 
 interface SidebarProps {
-  user: { firstName: string; lastName: string };
+  user: { firstName?: string; lastName?: string; name?: string } | null; // Allow null and optional fields
 }
 
 const Sidebar = ({ user }: SidebarProps) => {
@@ -29,7 +29,7 @@ const Sidebar = ({ user }: SidebarProps) => {
         </Link>
 
         {sidebarLinks.map((item) => {
-          const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
+          const isActive = pathname === item.route || pathname.startsWith(`${item.route}`);
 
           return (
             <Link
@@ -38,21 +38,28 @@ const Sidebar = ({ user }: SidebarProps) => {
               className={cn('sidebar-link', { 'bg-bank-gradient': isActive })}
             >
               <div className="relative size-6">
-                <Image src={item.imgURL} alt={item.label} fill 
-                className={cn({'brightness-[3] invert-0':isActive})}
+                <Image 
+                  src={item.imgURL} 
+                  alt={item.label} 
+                  fill 
+                  className={cn({ 'brightness-[3] invert-0': isActive })}
                 />
               </div>
-              <p className={cn('sidebar-label',{'!text-white':isActive})}>
+              <p className={cn('sidebar-label', { '!text-white': isActive })}>
                 {item.label}
               </p>
             </Link>
           );
         })}
-        USER
+        
+        {/* User placeholder or name */}
+        <p className="text-sm mt-4 font-semibold">
+          {user?.firstName ? `Welcome, ${user.firstName}` : 'Welcome, Guest'}
+        </p>
       </nav>
 
-      <Footer user={user as User}/>
-      
+      {/* Pass user to Footer */}
+      <Footer user={user} type="desktop" />
     </section>
   );
 };
