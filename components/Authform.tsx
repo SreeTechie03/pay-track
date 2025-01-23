@@ -21,7 +21,7 @@ import CustomInput from './CustomInput'
 import { Loader2, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
-
+//hello
 const Authform = ({type}:{type :string}) => {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
