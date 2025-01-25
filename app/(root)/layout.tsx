@@ -6,6 +6,7 @@ import Image from "next/image";
 import MobileNav from "@/components/ui/MobileNav";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 import Sidebar from "@/components/ui/Sidebar";
+import { redirect } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,18 +32,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Fetch user data in a separate function
-  const userPromise = getLoggedInUser();
+  const loggedIn = getLoggedInUser();
 
+
+  if (!loggedIn) redirect('/sign-in');
   return (
     <html lang="en">
       <body>
         <main className="flex h-screen w-full font-inter">
-          <Sidebar user={await userPromise} />
+          <Sidebar user={await loggedIn} />
           <div className="flex size-full flex-col">
             <div className="root-layout">
               <Image src="/icons/logo.svg" width={30} height={30} alt="logo" />
               <div>
-                <MobileNav user={await userPromise} />
+                <MobileNav user={await loggedIn} />
               </div>
             </div>
             {children}
