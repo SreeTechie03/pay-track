@@ -56,17 +56,12 @@ const Authform = ({type}:{type :string}) => {
 
 
           if(type === 'sign-in'){
-            console.log(data.email);
             const response = await signIn({
               email: data.email,
               password: data.password,
             })
 
-              if (response ) {
-                router.push('/');
-              } else {
-                alert('Invalid email or password. Please try again.');
-              }
+             if(response) router.push('/')
           }
           
         } catch (error: any) {
