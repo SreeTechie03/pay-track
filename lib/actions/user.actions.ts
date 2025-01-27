@@ -6,32 +6,26 @@ import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
 
 
-// export const signIn = async ({email, password}:
-// signInProps) => {
-//     try{
-//       const { account } = await createAdminClient();
-//       const response = await account.createEmailPasswordSession(email, password);
-
-
-//       return parseStringify(response);
-//     } catch (error) {
-//         console.log('Error', error);
-//     }
-// }
-
 export const signIn = async ({ email, password }: signInProps) => {
   try {
     const { account } = await createAdminClient();
-    console.log("Account object:", account);
+    console.log('Admin client initialized:', account);
 
     const response = await account.createEmailPasswordSession(email, password);
-    console.log("Sign-in response:", response);
+    console.log('Sign-in successful, response:', response);
+
+    // Store session in cookie
+    (await cookies()).set('appwrite-session', response.secret, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: true,
+    });
 
     return parseStringify(response);
-  } catch (error) {
-    console.error("Sign-in error:", error);
-
-    throw error; // Re-throw the error for the calling function to handle.
+  } catch (error: any) {
+    console.error('Sign-in failed:', error.response?.message || error.message);
+    throw error;
   }
 };
 
@@ -82,5 +76,3 @@ export const logoutAccount = async () =>{
     return null;
   }
 }
-
- 

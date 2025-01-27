@@ -56,17 +56,26 @@ const Authform = ({type}:{type :string}) => {
 
 
           if(type === 'sign-in'){
+            console.log(data.email);
             const response = await signIn({
               email: data.email,
               password: data.password,
             })
 
-             if(response) router.push('/')
+              if (response ) {
+                router.push('/');
+              } else {
+                alert('Invalid email or password. Please try again.');
+              }
           }
           
-        } catch (error) {
-          console.log(error);
-        }finally{
+        } catch (error: any) {
+          if (error?.response?.message) {
+            alert(`Authentication failed: ${error.response.message}`);
+          } else {
+            alert('Authentication failed. Please check your email and password.');
+          }
+        } finally {
           setIsLoading(false);
         }
       }
