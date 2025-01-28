@@ -22,10 +22,10 @@ const Sidebar = ({ user }: SidebarProps) => {
             src="icons/logo.svg"
             width={34}
             height={34}
-            alt="Origin logo"
+            alt="SmartEd logo"
             className="size-[24px] max-xl:size-14"
           />
-          <h1 className="sidebar-logo">Origin</h1>
+          <h1 className="sidebar-logo">SmartEd Innovations</h1>
         </Link>
 
         {sidebarLinks.map((item) => {
@@ -40,7 +40,7 @@ const Sidebar = ({ user }: SidebarProps) => {
               <div className="relative size-6">
                 <Image 
                   src={item.imgURL} 
-                  alt={item.label} 
+                  alt={item.label || ''} 
                   fill 
                   className={cn({ 'brightness-[3] invert-0': isActive })}
                 />
@@ -54,7 +54,7 @@ const Sidebar = ({ user }: SidebarProps) => {
         
         {/* User placeholder or name */}
         <p className="text-sm mt-4 font-semibold">
-          {user?.firstName ? `Welcome, ${user.firstName}` : 'Welcome, Guest'}
+          {user?.firstName ? `Welcome, ${user.firstName}` : ''}
         </p>
       </nav>
 

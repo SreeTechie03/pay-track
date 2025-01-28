@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Origin",
-  description: "Origin is a banking platform for everyone.",
+  title: "SmartEd Innovations",
+  description: "SmartEd is a banking platform for everyone.",
   icons: {
     icon: "/icons/logo.svg",
   },

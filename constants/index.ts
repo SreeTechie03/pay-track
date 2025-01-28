@@ -1,8 +1,16 @@
+import { Label } from "@radix-ui/react-label";
+
 export const sidebarLinks = [
   {
     imgURL: "/icons/home.svg",
     route: "/",
     label: "Home",
+  },
+  {
+    imgURL:"/icons/dashboard.svg",
+    route: "/dashboard",
+    Label: "Dashboard",
+
   },
   {
     imgURL: "/icons/dollar-circle.svg",

@@ -19,8 +19,8 @@ const ibmPlexSerif = IBM_Plex_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Origin",
-  description: "Origin is a banking platform for everyone.",
+  title: "SmartEd Innovations",
+  description: "SmartEd is a banking platform for everyone.",
   icons: {
     icon: "/icons/logo.svg",
   },

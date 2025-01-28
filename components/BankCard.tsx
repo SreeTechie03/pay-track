@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import React from 'react';
-import { CreditCardProps } from './types'; // Adjust the path if necessary
 import { formatAmount } from '@/lib/utils';
 import Image from 'next/image';
 
-const BankCard = ({ account, userName, showBalance = true }: CreditCardProps) => {
+const BankCard = ({ account, userName, showBalance = true }: 
+  CreditCardProps) => {
   return (
     <div className="flex flex-col">
       <Link href="/" className="bank-card">

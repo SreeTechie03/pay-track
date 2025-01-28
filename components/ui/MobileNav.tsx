@@ -48,10 +48,10 @@ const MobileNav = ({ user }: MobileNavProps) => {
               src="/icons/logo.svg"
               width={34}
               height={34}
-              alt="Origin logo"
+              alt="SmartEd logo"
             />
             <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
-              Origin
+              SmartEd Innovations
             </h1>
           </Link>
           <div className="mobilenav-sheet">
@@ -72,7 +72,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
                       >
                         <Image
                           src={item.imgURL}
-                          alt={item.label}
+                          alt={item.label || ''}
                           width={20}
                           height={20}
                           className={cn({ 'brightness-[3] invert-0': isActive })}
