@@ -9,8 +9,7 @@ export const sidebarLinks = [
   {
     imgURL:"/icons/dashboard.svg",
     route: "/dashboard",
-    Label: "Dashboard",
-
+    label: "Dashboard",
   },
   {
     imgURL: "/icons/dollar-circle.svg",
