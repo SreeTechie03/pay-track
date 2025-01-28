@@ -7,9 +7,23 @@ export const sidebarLinks = [
     label: "Home",
   },
   {
-    imgURL:"/icons/dashboard.svg",
+    imgURL: "/icons/dashboard.svg",
     route: "/dashboard",
     label: "Dashboard",
+    dropdown: [
+      {
+        label: "Admin",
+        route: "/dashboard/admin",
+      },
+      {
+        label: "Employee",
+        route: "/dashboard/employee",
+      },
+      {
+        label: "Operations",
+        route: "/dashboard/operations",
+      },
+    ],
   },
   {
     imgURL: "/icons/dollar-circle.svg",
