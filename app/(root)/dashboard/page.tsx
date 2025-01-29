@@ -15,9 +15,9 @@ const mockData = {
   topEmployees: [
     { name: 'Ramana – Guntur Karam', revenue: 198450 },
     { name: 'Daya – Temper', revenue: 187600 },
-    { name: 'Pushpa Raj – Pushpa', revenue: 176900 },
+    { name: 'Mulleti Pushpa Raj – Pushpa', revenue: 176900 },
     { name: 'Abhiram – Nannaku Prematho', revenue: 165300 },
-    { name: 'Krishna Murthy Kautilya – Athadu', revenue: 154700 }
+    { name: 'Krishna Murthy Kautilya – Nannaku Prematho', revenue: 154700 }
   ],
   myMetrics: {
     revenue: 187600,
