@@ -158,7 +158,7 @@ declare interface HeaderBoxProps {
 }
 
 declare interface MobileNavProps {
-  user: User;
+  user: user | null;
 }
 
 declare interface PageHeaderProps {
@@ -346,3 +346,5 @@ declare interface getBankProps {
 declare interface getBankByAccountIdProps {
   accountId: string;
 }
+
+

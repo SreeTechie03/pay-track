@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "SmartEd Innovations",
   description: "SmartEd is a banking platform for everyone.",
   icons: {
-    icon: "/icons/logo.svg",
+    icon: "/icons/logo.png",
   },
 };
 
@@ -43,7 +43,7 @@ export default async function RootLayout({
           <Sidebar user={await loggedIn} />
           <div className="flex size-full flex-col">
             <div className="root-layout">
-              <Image src="/icons/logo.svg" width={30} height={30} alt="logo" />
+              <Image src="/icons/logo.jpeg" width={40} height={40} alt="logo" />
               <div>
                 <MobileNav user={await loggedIn} />
               </div>

@@ -1,5 +1,5 @@
-'use client';
-import React from 'react';
+'use client'
+
 import {
   Sheet,
   SheetClose,
@@ -8,30 +8,19 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import Image from 'next/image';
-import Link from 'next/link';
-import { sidebarLinks } from '@/constants';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import Footer from './Footer';
-
-// Define MobileNavProps
-type MobileNavProps = {
-  user: {
-    id?: string;
-    name?: string;
-    email?: string;
-    preferences?: Record<string, any>; // Optional user preferences
-  } | null; // Allow user to be null
-};
-
+} from "@/components/ui/sheet"
+import { sidebarLinks } from "@/constants"
+import { cn } from "@/lib/utils"
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import Footer from "./Footer"
 
 const MobileNav = ({ user }: MobileNavProps) => {
   const pathname = usePathname();
 
   return (
-    <section className="w-full max-w-[264px]">
+    <section className="w-fulll max-w-[264px]">
       <Sheet>
         <SheetTrigger>
           <Image
@@ -43,73 +32,44 @@ const MobileNav = ({ user }: MobileNavProps) => {
           />
         </SheetTrigger>
         <SheetContent side="left" className="border-none bg-white">
-          <Link href="/" className="cursor-pointer flex items-center gap-1 px-4">
-            <Image
-              src="/icons/logo.svg"
+          <Link href="/" className="cursor-pointer flex items-center gap-1 px-0">
+            <Image 
+              src="/icons/logo.jpeg"
               width={34}
               height={34}
-              alt="SmartEd logo"
+              alt="Horizon logo"
             />
-            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
-              SmartEd Innovations
-            </h1>
+            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">SmartEd Innovations</h1>
           </Link>
           <div className="mobilenav-sheet">
             <SheetClose asChild>
-              <nav className="flex h-full flex-col gap-6 pt-16 text-black">
-                {sidebarLinks.map((item) => {
-                  const isActive =
-                    pathname === item.route || pathname.startsWith(`${item.route}`);
+              <nav className="flex h-full flex-col gap-6 pt-16 text-white">
+                  {sidebarLinks.map((item) => {
+                const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`)
 
-                  return (
-                    <SheetClose asChild key={item.route}>
-                      <Link
-                        href={item.route}
-                        key={item.label}
-                        className={cn('mobilenav-sheet_close w-full', {
-                          'bg-bank-gradient': isActive,
-                        })}
-                      >
-                        <Image
+                return (
+                  <SheetClose asChild key={item.route}>
+                    <Link href={item.route} key={item.label}
+                      className={cn('mobilenav-sheet_close w-full', { 'bg-bank-gradient': isActive })}
+                    >
+                        <Image 
                           src={item.imgURL}
-                          alt={item.label || ''}
+                          alt={item.label}
                           width={20}
                           height={20}
-                          className={cn({ 'brightness-[3] invert-0': isActive })}
+                          className={cn({
+                            'brightness-[3] invert-0': isActive
+                          })}
                         />
-                        <p
-                          className={cn(
-                            'text-16 font-semibold text-black-2',
-                            { 'text-white': isActive }
-                          )}
-                        >
-                          {item.label}
-                        </p>
-                      </Link>
-                    </SheetClose>
-                  );
-                })}
+                      <p className={cn("text-16 font-semibold text-black-2", { "text-white": isActive })}>
+                        {item.label}
+                      </p>
+                    </Link>
+                  </SheetClose>
+                )
+              })}
 
-                {/* User Info */}
-                {user ? (
-                  <div className="flex items-center gap-2 px-4">
-                    <Image
-                      src="/icons/user.svg" // Replace with actual user icon or avatar
-                      alt={""}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
-                    />
-                    <span className="text-16 font-medium">{user.name}</span>
-                  </div>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="text-16 font-medium text-blue-500 px-4"
-                  >
-                    Login
-                  </Link>
-                )}
+              USER
               </nav>
             </SheetClose>
 
@@ -118,7 +78,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
         </SheetContent>
       </Sheet>
     </section>
-  );
-};
+  )
+}
 
-export default MobileNav;
+export default MobileNav

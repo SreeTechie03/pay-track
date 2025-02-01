@@ -178,3 +178,11 @@ export const AuthformSchema =(type:string)=> z.object({
     dateofbirth:type==='sign-in'?z.string().optional():z.string().min(3),
     ssn:type==='sign-in'?z.string().optional():z.string().min(3)
   })
+  export function formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
