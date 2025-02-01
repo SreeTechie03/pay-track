@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DollarSign, Users, Building2 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -11,16 +11,38 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { MetricCard } from '../MetricCard';
 import { AdminSubView } from '@/app/(root)/dashboard/types/dashboard';
-import { mockData } from '@/app/(root)/dashboard/data/mockData';
+import { MetricCard } from '../MetricCard';
 import { formatCurrency } from '@/lib/utils';
+import { mockData } from '@/app/(root)/dashboard/data/mockData';
+import { AddEmployeeDialog } from './AddEmployeeDailog';
+
 
 interface AdminDashboardProps {
   subView: AdminSubView;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
+  const [isAddEmployeeOpen, setIsAddEmployeeOpen] = useState(false);
+
+  const handleAddEmployee = (data: {
+    name: string;
+    team: string;
+    email: string;
+    mobile: string;
+    monthlyTarget: number;
+  }) => {
+    const employee = {
+      name: data.name,
+      team: data.team,
+      email: data.email,
+      role: "Employee", // Assign a default role
+    };
+  
+    console.log("Adding employee:", employee);
+  };
+  
+
   if (subView === 'overview') {
     return (
       <div className="space-y-6">
@@ -195,11 +217,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
         <div className="bg-white p-6 rounded-xl shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-medium text-gray-900">Employee Directory</h3>
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            <button
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              onClick={() => setIsAddEmployeeOpen(true)}
             >
               Add Employee
             </button>
           </div>
+          <AddEmployeeDialog
+            isOpen={isAddEmployeeOpen}
+            onClose={() => setIsAddEmployeeOpen(false)}
+            onSubmit={handleAddEmployee}
+          />
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
