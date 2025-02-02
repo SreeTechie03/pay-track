@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { DollarSign, Users, Building2 } from 'lucide-react';
+import React,{useState,useEffect} from 'react';
+import { DollarSign, Users, Building2, X } from 'lucide-react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -11,38 +11,16 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { AdminSubView } from '@/app/(root)/dashboard/types/dashboard';
 import { MetricCard } from '../MetricCard';
-import { formatCurrency } from '@/lib/utils';
+import { AdminSubView } from '@/app/(root)/dashboard/types/dashboard';
 import { mockData } from '@/app/(root)/dashboard/data/mockData';
-import { AddEmployeeDialog } from './AddEmployeeDailog';
-
+import { formatCurrency } from '@/lib/utils';
 
 interface AdminDashboardProps {
   subView: AdminSubView;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
-  const [isAddEmployeeOpen, setIsAddEmployeeOpen] = useState(false);
-
-  const handleAddEmployee = (data: {
-    name: string;
-    team: string;
-    email: string;
-    mobile: string;
-    monthlyTarget: number;
-  }) => {
-    const employee = {
-      name: data.name,
-      team: data.team,
-      email: data.email,
-      role: "Employee", // Assign a default role
-    };
-  
-    console.log("Adding employee:", employee);
-  };
-  
-
   if (subView === 'overview') {
     return (
       <div className="space-y-6">
@@ -210,76 +188,174 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
       </div>
     );
   }
+  const [employees, setEmployees] = useState(mockData.topEmployees);
+  const [showForm, setShowForm] = useState(false);
+  const [newEmployee, setNewEmployee] = useState({ 
+    name: '', 
+    team: '', 
+    revenue: 0,  // Change to number
+    tasks: 0,    // Change to number
+    attendance: 0 // Change to number
+  });
+  
 
+  useEffect(() => {
+    // Retrieve stored employees or fallback to mockData
+    const storedEmployees = JSON.parse(localStorage.getItem('topEmployees') || '[]');
+    if (storedEmployees.length > 0) {
+      setEmployees(storedEmployees);
+    } else {
+      setEmployees(mockData.topEmployees); // Use mockData initially
+    }
+  }, []);
+  
+  
+  // Load data from local storage on component mount
+  useEffect(() => {
+    const storedEmployees = JSON.parse(localStorage.getItem('topEmployees') || '[]');
+    if (storedEmployees.length > 0) {
+      setEmployees(storedEmployees);
+    } else {
+      setEmployees(mockData.topEmployees); // Load from mockData initially
+    }
+  }, []);
+  const handleAddEmployee = () => {
+    if (newEmployee.name && newEmployee.team) {
+      const updatedEmployee = {
+        ...newEmployee,
+        revenue: Number(newEmployee.revenue),
+        tasks: Number(newEmployee.tasks),
+        attendance: Number(newEmployee.attendance),
+      };
+  
+      // Get the current employees list
+      const storedEmployees = JSON.parse(localStorage.getItem('topEmployees') || '[]');
+  
+      // Add the new employee and update storage
+      const updatedEmployees = [updatedEmployee, ...storedEmployees];
+      localStorage.setItem('topEmployees', JSON.stringify(updatedEmployees));
+  
+      // Update the state to reflect the changes
+      setEmployees(updatedEmployees);
+  
+      // Reset the form
+      setShowForm(false);
+      setNewEmployee({ name: '', team: '', revenue: 0, tasks: 0, attendance: 0 });
+    }
+  };
+  
+  const handleDeleteEmployee = (index: number) => {
+    const updatedEmployees = employees.filter((_, i) => i !== index);
+    setEmployees(updatedEmployees);
+    localStorage.setItem('topEmployees', JSON.stringify(updatedEmployees));
+  };
+  
+  
   if (subView === 'employees') {
     return (
-      <div className="space-y-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-medium text-gray-900">Employee Directory</h3>
+      <div className="space-y-6 relative">
+      <div className="bg-white p-6 rounded-xl shadow-sm">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-medium text-gray-900">Employee Directory</h3>
+          <button
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            onClick={() => setShowForm(true)}
+          >
+            Add Employee
+          </button>
+        </div>
+      </div>
+      {showForm && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-96 relative">
             <button
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-              onClick={() => setIsAddEmployeeOpen(true)}
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+              onClick={() => setShowForm(false)}
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">New Employee Details</h3>
+            <input
+              type="text"
+              placeholder="Name"
+              value={newEmployee.name}
+              onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+              className="w-full p-2 mb-2 border rounded"
+            />
+            <input
+              type="text"
+              placeholder="Team"
+              value={newEmployee.team}
+              onChange={(e) => setNewEmployee({ ...newEmployee, team: e.target.value })}
+              className="w-full p-2 mb-2 border rounded"
+            />
+            <input
+              type="number"
+              placeholder="Revenue"
+              value={newEmployee.revenue}
+              onChange={(e) => setNewEmployee({ ...newEmployee, revenue: Number(e.target.value) })}
+              className="w-full p-2 mb-2 border rounded"
+            />
+            <input
+              type="number"
+              placeholder="Tasks"
+              value={newEmployee.tasks}
+              onChange={(e) => setNewEmployee({ ...newEmployee, tasks: Number(e.target.value) })}
+              className="w-full p-2 mb-2 border rounded"
+            />
+            <input
+              type="number"
+              placeholder="Attendance (%)"
+              value={newEmployee.attendance}
+              onChange={(e) => setNewEmployee({ ...newEmployee, attendance: Number(e.target.value) })}
+              className="w-full p-2 mb-4 border rounded"
+            />
+            <button
+              onClick={handleAddEmployee}
+              className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Add Employee
             </button>
           </div>
-          <AddEmployeeDialog
-            isOpen={isAddEmployeeOpen}
-            onClose={() => setIsAddEmployeeOpen(false)}
-            onSubmit={handleAddEmployee}
-          />
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Employee
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Team
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Revenue
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tasks
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Attendance
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {mockData.topEmployees.map((employee, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{employee.name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">{employee.team}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">
-                      {formatCurrency(employee.revenue)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">
-                      {employee.tasks}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">
-                      {employee.attendance}%
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
-      </div>
-    );
-  }
+      )}
+      <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks</th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {employees.map((employee, index) => (
+            <tr key={index} className="hover:bg-gray-50 transition-colors">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{employee.name}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.team}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">{employee.revenue}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">{employee.tasks}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">{employee.attendance}%</td>
+              <td className="px-6 py-4 whitespace-nowrap text-right">
+              <button
+  onClick={() => handleDeleteEmployee(index)}
+  className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+>
+  Delete
+</button>
+
+
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    </div>
+  );}
 
   return (
     <div className="space-y-6">
