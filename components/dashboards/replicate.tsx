@@ -18,7 +18,7 @@ import { AdminSubView } from '@/app/(root)/dashboard/types/dashboard';
 import { MetricCard } from '../MetricCard';
 import { formatCurrency } from '@/lib/utils';
 import { mockData } from '@/app/(root)/dashboard/data/mockData';
-import { AddEmployeeDialog } from './AddEmployeeDailog';
+// import { AddEmployeeDialog } from './AddEmployeeDailog';
 
 interface AdminDashboardProps {
   subView: AdminSubView;

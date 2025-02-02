@@ -1,5 +1,5 @@
-import React,{useState,useEffect} from 'react';
-import { DollarSign, Users, Building2, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { DollarSign, Users, Building2, X, AlertTriangle } from 'lucide-react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -11,16 +11,118 @@ import {
   BarChart,
   Bar
 } from 'recharts';
+import { formatCurrency } from '@/lib/utils';
+import { mockData } from '@/app/(root)/dashboard/data/mockData';
 import { MetricCard } from '../MetricCard';
 import { AdminSubView } from '@/app/(root)/dashboard/types/dashboard';
-import { mockData } from '@/app/(root)/dashboard/data/mockData';
-import { formatCurrency } from '@/lib/utils';
+// import { MetricCard } from './components/MetricCard';
+// import { mockData } from './data/mockData';
+// import { formatCurrency } from './lib/utils';
+// import type { AdminSubView } from './types/dashboard';
 
-interface AdminDashboardProps {
-  subView: AdminSubView;
+interface Employee {
+  name: string;
+  mobileNumber: string;
+  email: string;
+  teamName: string;
+  monthlyTarget: number;
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
+interface DeleteConfirmationProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  employeeName: string;
+}
+
+const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  employeeName,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-xl shadow-lg w-96 relative">
+        <div className="flex items-center justify-center mb-4 text-red-600">
+          <AlertTriangle size={48} />
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Confirm Delete</h3>
+        <p className="text-gray-600 text-center mb-6">
+          Are you sure you want to delete {employeeName}? This action cannot be undone.
+        </p>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const AdminDashboard: React.FC<{ subView: AdminSubView }> = ({ subView }) => {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState<{ index: number; name: string } | null>(null);
+  const [newEmployee, setNewEmployee] = useState<Employee>({
+    name: '',
+    mobileNumber: '',
+    email: '',
+    teamName: '',
+    monthlyTarget: 0
+  });
+
+  useEffect(() => {
+    const storedEmployees = localStorage.getItem('employees');
+    if (storedEmployees) {
+      setEmployees(JSON.parse(storedEmployees));
+    }
+  }, []);
+
+  const handleAddEmployee = () => {
+    if (newEmployee.name && newEmployee.email && newEmployee.mobileNumber) {
+      const updatedEmployees = [newEmployee, ...employees];
+      localStorage.setItem('employees', JSON.stringify(updatedEmployees));
+      setEmployees(updatedEmployees);
+      setShowForm(false);
+      setNewEmployee({
+        name: '',
+        mobileNumber: '',
+        email: '',
+        teamName: '',
+        monthlyTarget: 0
+      });
+    }
+  };
+
+  const handleDeleteClick = (index: number, name: string) => {
+    setEmployeeToDelete({ index, name });
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (employeeToDelete !== null) {
+      const updatedEmployees = employees.filter((_, i) => i !== employeeToDelete.index);
+      setEmployees(updatedEmployees);
+      localStorage.setItem('employees', JSON.stringify(updatedEmployees));
+      setShowDeleteConfirmation(false);
+      setEmployeeToDelete(null);
+    }
+  };
+
   if (subView === 'overview') {
     return (
       <div className="space-y-6">
@@ -188,174 +290,124 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
       </div>
     );
   }
-  const [employees, setEmployees] = useState(mockData.topEmployees);
-  const [showForm, setShowForm] = useState(false);
-  const [newEmployee, setNewEmployee] = useState({ 
-    name: '', 
-    team: '', 
-    revenue: 0,  // Change to number
-    tasks: 0,    // Change to number
-    attendance: 0 // Change to number
-  });
-  
 
-  useEffect(() => {
-    // Retrieve stored employees or fallback to mockData
-    const storedEmployees = JSON.parse(localStorage.getItem('topEmployees') || '[]');
-    if (storedEmployees.length > 0) {
-      setEmployees(storedEmployees);
-    } else {
-      setEmployees(mockData.topEmployees); // Use mockData initially
-    }
-  }, []);
-  
-  
-  // Load data from local storage on component mount
-  useEffect(() => {
-    const storedEmployees = JSON.parse(localStorage.getItem('topEmployees') || '[]');
-    if (storedEmployees.length > 0) {
-      setEmployees(storedEmployees);
-    } else {
-      setEmployees(mockData.topEmployees); // Load from mockData initially
-    }
-  }, []);
-  const handleAddEmployee = () => {
-    if (newEmployee.name && newEmployee.team) {
-      const updatedEmployee = {
-        ...newEmployee,
-        revenue: Number(newEmployee.revenue),
-        tasks: Number(newEmployee.tasks),
-        attendance: Number(newEmployee.attendance),
-      };
-  
-      // Get the current employees list
-      const storedEmployees = JSON.parse(localStorage.getItem('topEmployees') || '[]');
-  
-      // Add the new employee and update storage
-      const updatedEmployees = [updatedEmployee, ...storedEmployees];
-      localStorage.setItem('topEmployees', JSON.stringify(updatedEmployees));
-  
-      // Update the state to reflect the changes
-      setEmployees(updatedEmployees);
-  
-      // Reset the form
-      setShowForm(false);
-      setNewEmployee({ name: '', team: '', revenue: 0, tasks: 0, attendance: 0 });
-    }
-  };
-  
-  const handleDeleteEmployee = (index: number) => {
-    const updatedEmployees = employees.filter((_, i) => i !== index);
-    setEmployees(updatedEmployees);
-    localStorage.setItem('topEmployees', JSON.stringify(updatedEmployees));
-  };
-  
-  
   if (subView === 'employees') {
     return (
-      <div className="space-y-6 relative">
-      <div className="bg-white p-6 rounded-xl shadow-sm">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium text-gray-900">Employee Directory</h3>
-          <button
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            onClick={() => setShowForm(true)}
-          >
-            Add Employee
-          </button>
-        </div>
-      </div>
-      {showForm && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-96 relative">
+      <div className="space-y-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium text-gray-900">Employee Directory</h3>
             <button
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
-              onClick={() => setShowForm(false)}
-            >
-              <X size={20} />
-            </button>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">New Employee Details</h3>
-            <input
-              type="text"
-              placeholder="Name"
-              value={newEmployee.name}
-              onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
-              className="w-full p-2 mb-2 border rounded"
-            />
-            <input
-              type="text"
-              placeholder="Team"
-              value={newEmployee.team}
-              onChange={(e) => setNewEmployee({ ...newEmployee, team: e.target.value })}
-              className="w-full p-2 mb-2 border rounded"
-            />
-            <input
-              type="number"
-              placeholder="Revenue"
-              value={newEmployee.revenue}
-              onChange={(e) => setNewEmployee({ ...newEmployee, revenue: Number(e.target.value) })}
-              className="w-full p-2 mb-2 border rounded"
-            />
-            <input
-              type="number"
-              placeholder="Tasks"
-              value={newEmployee.tasks}
-              onChange={(e) => setNewEmployee({ ...newEmployee, tasks: Number(e.target.value) })}
-              className="w-full p-2 mb-2 border rounded"
-            />
-            <input
-              type="number"
-              placeholder="Attendance (%)"
-              value={newEmployee.attendance}
-              onChange={(e) => setNewEmployee({ ...newEmployee, attendance: Number(e.target.value) })}
-              className="w-full p-2 mb-4 border rounded"
-            />
-            <button
-              onClick={handleAddEmployee}
-              className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              onClick={() => setShowForm(true)}
             >
               Add Employee
             </button>
           </div>
         </div>
-      )}
-      <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {employees.map((employee, index) => (
-            <tr key={index} className="hover:bg-gray-50 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{employee.name}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.team}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">{employee.revenue}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">{employee.tasks}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">{employee.attendance}%</td>
-              <td className="px-6 py-4 whitespace-nowrap text-right">
+
+        {showForm && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl shadow-lg w-96 relative">
               <button
-  onClick={() => handleDeleteEmployee(index)}
-  className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
->
-  Delete
-</button>
+                className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+                onClick={() => setShowForm(false)}
+              >
+                <X size={20} />
+              </button>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">New Employee Details</h3>
+              <input
+                type="text"
+                placeholder="Name"
+                value={newEmployee.name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+                className="w-full p-2 mb-2 border rounded"
+              />
+              <input
+                type="tel"
+                placeholder="Mobile Number"
+                value={newEmployee.mobileNumber}
+                onChange={(e) => setNewEmployee({ ...newEmployee, mobileNumber: e.target.value })}
+                className="w-full p-2 mb-2 border rounded"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={newEmployee.email}
+                onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                className="w-full p-2 mb-2 border rounded"
+              />
+              <input
+                type="text"
+                placeholder="Team Name"
+                value={newEmployee.teamName}
+                onChange={(e) => setNewEmployee({ ...newEmployee, teamName: e.target.value })}
+                className="w-full p-2 mb-2 border rounded"
+              />
+              <input
+                type="number"
+                placeholder="Monthly Target"
+                value={newEmployee.monthlyTarget}
+                onChange={(e) => setNewEmployee({ ...newEmployee, monthlyTarget: Number(e.target.value) })}
+                className="w-full p-2 mb-4 border rounded"
+              />
+              <button
+                onClick={handleAddEmployee}
+                className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Add Employee
+              </button>
+            </div>
+          </div>
+        )}
 
+        <DeleteConfirmation
+          isOpen={showDeleteConfirmation}
+          onClose={() => setShowDeleteConfirmation(false)}
+          onConfirm={handleDeleteConfirm}
+          employeeName={employeeToDelete?.name || ''}
+        />
 
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    </div>
-  );}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mobile Number</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team Name</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Monthly Target</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {employees.map((employee, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{employee.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.mobileNumber}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.teamName}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">
+                      {formatCurrency(employee.monthlyTarget)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <button
+                        onClick={() => handleDeleteClick(index, employee.name)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -413,3 +465,5 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ subView }) => {
     </div>
   );
 };
+
+export default AdminDashboard;
