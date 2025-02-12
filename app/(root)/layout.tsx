@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "SmartEd Innovations",
   description: "SmartEd is a banking platform for everyone.",
   icons: {
-    icon: "/icons/logo.png",
+    icon: "/icons/logo.jpeg",
   },
 };
 

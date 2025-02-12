@@ -19,7 +19,7 @@ const Sidebar = ({ user }: SidebarProps) => {
       <nav className="flex flex-col gap-4">
         <Link href="/" className="mb-12 cursor-pointer flex items-center gap-2">
           <Image
-            src="icons/logo.svg"
+            src="/icons/logo.png" // Fixed the image source path
             width={34}
             height={34}
             alt="SmartEd logo"
@@ -29,14 +29,12 @@ const Sidebar = ({ user }: SidebarProps) => {
         </Link>
 
         {sidebarLinks.map((item) => {
-          // Changed: Strictly check if the current path matches the exact route
           const isActive = pathname === item.route;
 
           return (
             <Link
               href={item.route}
               key={item.label}
-              // Changed: Added conditional class for active state
               className={cn('sidebar-link', { 'bg-bank-gradient': isActive })}
             >
               <div className="relative size-6">
@@ -44,27 +42,21 @@ const Sidebar = ({ user }: SidebarProps) => {
                   src={item.imgURL} 
                   alt={item.label || ''} 
                   fill 
-                  // Changed: Adjusted brightness and inversion for active state
                   className={cn({ 'brightness-[3] invert-0': isActive })}
                 />
               </div>
-              <p
-                // Changed: Applied conditional text color for active state
-                className={cn('sidebar-label', { '!text-white': isActive })}
-              >
+              <p className={cn('sidebar-label', { '!text-white': isActive })}>
                 {item.label}
               </p>
             </Link>
           );
         })}
 
-        {/* User placeholder or name */}
         <p className="text-sm mt-4 font-semibold">
           {user?.firstName ? `Welcome, ${user.firstName}` : ''}
         </p>
       </nav>
 
-      {/* Pass user to Footer */}
       <Footer user={user} type="desktop" />
     </section>
   );
