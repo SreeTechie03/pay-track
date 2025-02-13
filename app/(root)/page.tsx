@@ -25,7 +25,7 @@ const Home = async () => {
         Recent Transactions
       </div>
       <RightSidebar 
-        user={loggedIn}
+        User={loggedIn}
         transactions={[]}
         banks={[{ currentBalance:123.50 }, 
           { currentBalance:500.50}]}
