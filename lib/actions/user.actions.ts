@@ -146,17 +146,20 @@ export const createLinkToken = async (user: User) => {
       user:{
         client_user_id: `${user.firstName} ${user.lastName}`,
       },
-      client_name : user.name,
+      client_name : user.firstName+" "+user.lastName,
       products: ['auth'] as Products[],
       language: 'en',
       country_codes: ['US'] as CountryCode[],
     }
-
+    //console.log(tokenParams)
     const response = await plaidClient.linkTokenCreate(tokenParams);
     return parseStringify({ linkToken: response.data.link_token })
 
-  } catch (error) {
+  } catch (error:any) {
     console.error('Create link token error:', error);
+    console.log(error.request)
+    console.log(error.config)
+    console.log(error.response)
     throw error;
   }
 }
@@ -259,20 +262,20 @@ export const getBanks = async ({ userId }: getBanksProps) => {
   }
 }
 
-export const getBank = async ({documentId }: getBanksProps) => {
-  try {
-    const { database } = await createAdminClient();
-    const bank = await database.listDocuments(
-      DATABASE_ID!,
-      BANK_COLLECTION_ID!,
-      [Query.equal("$id", [documentId])]
-    )
+// export const getBank = async ({documentId }: getBanksProps) => {
+//   try {
+//     const { database } = await createAdminClient();
+//     const bank = await database.listDocuments(
+//       DATABASE_ID!,
+//       BANK_COLLECTION_ID!,
+//       [Query.equal("$id", [documentId])]
+//     )
     
-    return parseStringify(bank.documents[0]); 
-  } catch (error) {
-    console.error("An error occurred while getting the banks:", error);
-  }
-}
+//     return parseStringify(bank.documents[0]); 
+//   } catch (error) {
+//     console.error("An error occurred while getting the banks:", error);
+//   }
+// }
 
 
 
