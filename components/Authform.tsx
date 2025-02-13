@@ -57,7 +57,11 @@ const Authform = ({ type }: { type: string }) => {
               dateOfBirth: data.dateofbirth!,
               ssn: data.ssn!,
             }
-            const newUser = await signUp(userData);
+            // const newUser = await signUp(userData);
+            // setUser(newUser);
+            console.log("User data before sign-up:", userData); // Debug user data
+            newUser = await signUp(userData);
+            console.log("New user after sign-up:", newUser); // Debug new user object
             setUser(newUser);
           } else {
             const response = await signIn({
@@ -79,7 +83,7 @@ const Authform = ({ type }: { type: string }) => {
           setIsLoading(false);
         }
       };
-
+      console.log("User state:", user);
   return (
     <section className='auth-form'>
         <header className='flex flex-col gap-5 md:gap-8'>

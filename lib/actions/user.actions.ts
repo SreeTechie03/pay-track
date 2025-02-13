@@ -12,6 +12,7 @@ import { access, link } from "fs";
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
 import { set } from "react-hook-form";
+import { format, isValid } from 'date-fns';
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -44,9 +45,26 @@ export const signIn = async ({ email, password }: signInProps) => {
 };
 
 
+
 export const signUp = async ( {password,...userData}: SignUpParams) => {
     const { email, firstName, lastName} = userData;
 
+    const formattedDateOfBirth = format(new Date(userData.dateOfBirth), 'yyyy-MM-dd');
+    if (!isValid(new Date(formattedDateOfBirth))) {
+      throw new Error('Invalid date of birth');
+    }
+
+    const validatePostalCode = (postalCode: string) => {
+      return /^\d{5}$/.test(postalCode);
+    };
+    if (!validatePostalCode(userData.postalCode)) {
+      throw new Error('Invalid postal code');
+    }
+
+    // Validate postalCode
+    if (!validatePostalCode(userData.postalCode)) {
+      throw new Error('Invalid postal code');
+    }
 
     let newUserAccount;
     

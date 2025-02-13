@@ -41,7 +41,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
       {variant === 'primary' ? (
         <Button
           onClick={() => open()}
-          disabled={!ready}
+          disabled={ready}
           className="plaidlink-primary"
         >
           Connect bank
