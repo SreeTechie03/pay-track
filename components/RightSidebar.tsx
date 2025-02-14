@@ -3,15 +3,18 @@ import Link from 'next/link';
 import React from 'react';
 import BankCard from './BankCard';
 
+
+
 const RightSidebar = ({
   user,
   transactions,
   banks,
 }: RightSidebarProps) => {
+  console.log("user:", user);
   // Fallback values for user properties
   const userName = user?.name || 'Guest';
   const userEmail = user?.email || 'No email available';
-  const userInitial = userName[0]?.toUpperCase() || 'G'; // Default to 'G' for 'Guest'
+  const userInitial = userName[0]?.toUpperCase() || 'G'; 
 
   return (
     <aside className="right-sidebar">

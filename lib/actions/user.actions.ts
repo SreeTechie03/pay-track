@@ -157,9 +157,9 @@ export const createLinkToken = async (user: User) => {
 
   } catch (error:any) {
     console.error('Create link token error:', error);
-    console.log(error.request)
-    console.log(error.config)
-    console.log(error.response)
+    // console.log(error.request)
+    // console.log(error.config)
+    // console.log(error.response)
     throw error;
   }
 }
