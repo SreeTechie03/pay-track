@@ -54,14 +54,14 @@ declare type Account = {
   id: string;
   availableBalance: number;
   currentBalance: number;
-  officialName: string;
+  officialName?: string;
   mask: string;
   institutionId: string;
   name: string;
   type: string;
   subtype: string;
   appwriteItemId: string;
-  sharableId: string;
+  sharableId?: string;
 };
 
 declare type Transaction = {
@@ -90,7 +90,7 @@ declare type Bank = {
   accessToken: string;
   fundingSourceUrl: string;
   userId: string;
-  sharableId: string;
+  sharableId?: string;
 };
 
 declare type AccountTypes =
@@ -199,6 +199,12 @@ declare interface BankDropdownProps {
   otherStyles?: string;
 }
 
+interface Bank {
+  $id: string;
+  availableBalance: number;
+}
+
+
 declare interface BankTabItemProps {
   account: Account;
   appwriteItemId?: string;
@@ -210,7 +216,7 @@ declare interface TotlaBalanceBoxProps {
   totalCurrentBalance: number;
 }
 
-//ikkada chesa nenu own ga
+
 declare interface FooterProps {
   user: User;
   type?: 'mobile' | 'desktop'
@@ -336,6 +342,7 @@ declare interface createBankAccountProps {
 }
 
 declare interface getBanksProps {
+  documentId?: string;
   userId: string;
 }
 

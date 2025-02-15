@@ -1,6 +1,28 @@
 {
     "workbench.sideBar.location": "left",
     "cSpell.words": [
-        "shareble"
+        "appwrite",
+        "Authform",
+        "chesa",
+        "dateofbirth",
+        "dwolla",
+        "firstname",
+        "ikkada",
+        "intitution",
+        "lastname",
+        "nenu",
+        "postalcode",
+        "shareble",
+        "Siderbar",
+        "Totla"
+    ],
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext",
+        "typescript"
     ]
 }
