@@ -12,7 +12,7 @@ const RightSidebar = ({
 }: RightSidebarProps) => {
   console.log("user:", user);
   // Fallback values for user properties
-  const userName = user?.name || 'Guest';
+  const userName = user?.firstName+" "+user?.lastName || 'Guest';
   const userEmail = user?.email || 'No email available';
   const userInitial = userName[0]?.toUpperCase() || 'G'; 
 

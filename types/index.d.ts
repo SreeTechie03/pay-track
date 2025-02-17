@@ -83,14 +83,15 @@ declare type Transaction = {
   receiverBankId: string;
 };
 
-declare type Bank = {
+
+type Bank = {
   $id: string;
   accountId: string;
   bankId: string;
   accessToken: string;
   fundingSourceUrl: string;
   userId: string;
-  sharableId?: string;
+  sharableId: string;
 };
 
 declare type AccountTypes =
@@ -210,7 +211,7 @@ declare interface BankTabItemProps {
   appwriteItemId?: string;
 }
 
-declare interface TotlaBalanceBoxProps {
+declare interface TotalBalanceBoxProps {
   accounts: Account[];
   totalBanks: number;
   totalCurrentBalance: number;
@@ -241,9 +242,9 @@ declare interface User{
 }
 
 declare interface RightSidebarProps {
-  user: User|null;
-  transactions: Transaction[];
-  banks: Bank[] & Account[];
+  user: Models.Document|User;
+  transactions: any[]|undefined;
+  banks: any[];
 }
 
 
@@ -342,8 +343,8 @@ declare interface createBankAccountProps {
 }
 
 declare interface getBanksProps {
-  documentId?: string;
   userId: string;
+  //documentId: string;
 }
 
 declare interface getBankProps {

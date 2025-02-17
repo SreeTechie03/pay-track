@@ -1,10 +1,10 @@
 import DoughnutChart from './ui/DoughnutChart';
 import AnimatedCounter from './ui/AnimatedCounter';
-interface TotalBalanceBoxProps {
-  accounts: any[];
-  totalBanks: number;
-  totalCurrentBalance: number;
-}
+// interface TotalBalanceBoxProps {
+//   accounts: Account[];
+//   totalBanks: number;
+//   totalCurrentBalance: number;
+// }
 
 const TotalBalanceBox = ({
   accounts = [],

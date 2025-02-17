@@ -28,9 +28,9 @@ const Footer = ({ user, type = 'desktop' }: FooterProps) => {
     <footer className="footer">
       {/* User Initial */}
       <div className={type === 'mobile' ? 'footer_name-mobile' : 'footer_name'}>
-        {user && user.name ? (
+        {user && user.firstName ? (
           <p className="text-xl font-bold text-gray-700">
-            {user?.name[0].toUpperCase()}
+            {user.firstName[0].toUpperCase()}
           </p>
         ) : (
           <p className="text-xl font-bold text-gray-700">?</p>
@@ -40,7 +40,7 @@ const Footer = ({ user, type = 'desktop' }: FooterProps) => {
       {/* User Name or Fallback */}
       <div className={type === 'mobile' ? 'footer_email-mobile' : 'footer_email'}>
         <h1 className="text-14 truncate text-gray-700 font-semibold">
-          {user?.name || 'Guest'}
+          {user?.firstName || 'Guest'}
         </h1>
         <p className="text-14 truncate font-normal text-gray-600">
           {user?.email || 'No Email'}

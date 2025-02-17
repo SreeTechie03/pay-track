@@ -7,17 +7,16 @@ import { getLoggedInUser } from '@/lib/actions/user.actions';
 const Home = async ({ searchParams:{id, page}}:
   SearchParamProps) => {
 
-  const loggedIn = await getLoggedInUser() ||{$id: '', name: 'Guest'}; 
+  const loggedIn = await getLoggedInUser() ||{$id: '', firstName: 'Guest'}; 
   const accounts = await getAccounts({ userId: loggedIn.$id || '' });
-  
-
-  
 
 
   if(!accounts) return;
   const accountsData = accounts?.data;
   const appwriteItemId =(id as string) || accountsData[0]?.appwriteItemId;  
   const account = await getAccount({ appwriteItemId });
+
+  console.log({ accountsData,account})
   return (
     <section className="home">
       <div className="home-content">
@@ -25,11 +24,11 @@ const Home = async ({ searchParams:{id, page}}:
           <HeaderBox
             type="greeting"
             title="Welcome"
-            user={loggedIn?.name || 'Guest'}
+            user={loggedIn?.firstName || 'Guest'}
             subtext="Access and manage your account and transactions, because that’s everyone’s dream."
           />
           <TotalBalanceBox
-          accounts={[accountsData]}
+          accounts={accountsData}
           totalBanks={accounts?.totalBanks}
           totalCurrentBalance={accounts?.totalCurrentBalance} 
           />
@@ -38,7 +37,7 @@ const Home = async ({ searchParams:{id, page}}:
       </div>
       <RightSidebar 
         user={loggedIn}
-        transactions={accounts?.transactions}
+        transactions={account?.transactions}
         banks={accountsData?.slice(0,2)}
       />
     </section>
