@@ -96,10 +96,7 @@ type Bank = {
 
 declare type AccountTypes =
   | "depository"
-  | "credit"
-  | "loan "
-  | "investment"
-  | "other";
+  | "credit";
 
 declare type Category = "Food and Drink" | "Travel" | "Transfer";
 
