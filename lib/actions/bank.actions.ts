@@ -24,7 +24,7 @@ export const getAccounts = async ({ userId }: { userId: string }) => {
 
     // Fetch account details for each bank
     const accounts = await Promise.all(
-      banks.map(async (bank: Bank) => {
+      banks.map(async (bank) => {
         // Get account info from Plaid
         const accountsResponse = await plaidClient.accountsGet({
           access_token: bank.accessToken,
@@ -103,11 +103,10 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     const institution = await getInstitution({
       institutionId: accountsResponse.data.item.institution_id!,
     });
-
+    console.log("Here They are")
     const transactions = await getTransactions({
       accessToken: bank?.accessToken,
     });
-
     const account = {
       id: accountData.account_id,
       availableBalance: accountData.balances.available!,
@@ -119,17 +118,16 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
       type: accountData.type as string,
       subtype: accountData.subtype! as string,
       appwriteItemId: bank?.$id,
+      transactions
     };
 
     // sort transactions by date such that the most recent transaction is first
-      const allTransactions = [...transactions].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-
-    return parseStringify({
-      data: account,
-      transactions: allTransactions,
-    });
+    //   const allTransactions = [...transactions].sort(
+    //   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    // );
+    
+    console.log(account)
+    return account;
   } catch (error) {
     console.error("An error occurred while getting the account:", error);
   }
@@ -162,7 +160,6 @@ export const getTransactions = async ({
   let transactions: any = [];
 
   try {
-    // Iterate through each page of new transaction updates for item
     while (hasMore) {
       const response = await plaidClient.transactionsSync({
         access_token: accessToken,
