@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { sidebarLinks } from '@/constants';
 import { cn } from '@/lib/utils';
 import Footer from './Footer';
+import PlaidLink from './PlaidLink';
 
 interface SidebarProps {
   user: { firstName?: string; lastName?: string; name?: string } | null; // Allow null and optional fields
@@ -19,7 +20,7 @@ const Sidebar = ({ user }: SidebarProps) => {
       <nav className="flex flex-col gap-4">
         <Link href="/" className="mb-12 cursor-pointer flex items-center gap-2">
           <Image
-            src="/icons/logo.png" // Fixed the image source path
+            src="/icons/logo.png"
             width={34}
             height={34}
             alt="SmartEd logo"
@@ -52,9 +53,7 @@ const Sidebar = ({ user }: SidebarProps) => {
           );
         })}
 
-        <p className="text-sm mt-4 font-semibold">
-          {user?.firstName ? `Welcome, ${user.firstName}` : ''}
-        </p>
+        <PlaidLink user={user as User}/>
       </nav>
 
       <Footer user={user} type="desktop" />

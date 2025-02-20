@@ -120,6 +120,12 @@ declare type TransferParams = {
   amount: string;
 };
 
+
+// declare type BankCardProps ={
+//   title: string;
+// };
+
+
 declare type AddFundingSourceParams = {
   dwollaCustomerId: string;
   processorToken: string;
