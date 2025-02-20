@@ -1,3 +1,4 @@
+import RecentTransactions from '@/components/RecentTransactions';
 import RightSidebar from '@/components/RightSidebar';
 import TotalBalanceBox from '@/components/TotalBalanceBox';
 import HeaderBox from '@/components/ui/HeaderBox';
@@ -5,14 +6,11 @@ import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
+  const currentPage = Number(page as string) || 1;
   const loggedIn = (await getLoggedInUser()) || { $id: '', firstName: 'Guest' };
 
   try {
     const accounts = await getAccounts({ userId: loggedIn.$id });
-
-    if (!accounts || !accounts.data?.length) {
-      return <p className="text-center text-red-500">No accounts found.</p>;
-    }
 
     const accountsData = accounts.data;
     const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
@@ -40,7 +38,12 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
               totalCurrentBalance={accounts?.totalCurrentBalance}
             />
           </header>
-          <p>Recent Transactions</p>
+          <RecentTransactions
+            accounts={accountsData}
+            transactions={account?.transactions}
+            appwriteItemId={appwriteItemId}
+            page={currentPage}          
+          />
         </div>
         <RightSidebar
           user={loggedIn}

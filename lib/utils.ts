@@ -81,7 +81,7 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams): string {
   );
 }
 
-type AccountTypes = "depository" | "credit";
+//type AccountTypes = "depository" | "credit";
 
 export function getAccountTypeColors(type: AccountTypes) {
   switch (type) {
