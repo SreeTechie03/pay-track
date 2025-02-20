@@ -207,8 +207,11 @@ declare interface BankDropdownProps {
 }
 
 interface Bank {
+  fundingSourceUrl: string;
+  userId: string;
   $id: string;
   availableBalance: number;
+
 }
 
 
